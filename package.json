@@ -1,6 +1,6 @@
 {
   "name": "git-diff-xml",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI tool to package git commit changes into a single XML file for code analysis",
   "main": "src/index.js",
   "bin": {
