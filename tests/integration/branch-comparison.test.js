@@ -14,6 +14,9 @@ async function setupTempRepoWithBranches() {
   execSync('git config user.name "Test User"', { cwd: tempDir });
   execSync('git config user.email "test@example.com"', { cwd: tempDir });
   
+  // Explicitly create and switch to main branch
+  execSync('git checkout -b main', { cwd: tempDir });
+  
   // Create initial file on main branch
   const filePath = path.join(tempDir, 'test.js');
   await fs.writeFile(filePath, 'console.log("Initial content on main branch");\n');
