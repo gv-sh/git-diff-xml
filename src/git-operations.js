@@ -85,9 +85,36 @@ function parseDiff(diffOutput) {
   return changes;
 }
 
+async function getBranchDiff(repoPath, sourceBranch, targetBranch) {
+  const git = simpleGit(repoPath);
+  
+  try {
+    // Use git merge-base to find the common ancestor
+    const commonAncestor = await git.raw(['merge-base', sourceBranch, targetBranch]);
+    
+    // Try to merge-tree to detect conflicts (without actually merging)
+    const mergeCheck = await git.raw(['merge-tree', commonAncestor.trim(), sourceBranch, targetBranch]);
+    
+    // If output contains merge conflict markers, there are conflicts
+    if (mergeCheck.includes('<<<<<<< ')) {
+      throw new Error('Merge conflicts detected between branches');
+    }
+  } catch (error) {
+    if (error.message.includes('Merge conflicts detected')) {
+      throw error; // Re-throw our custom error
+    }
+    // Other errors might be from command execution - continue to use diffSummary
+  }
+  
+  // Get all changed files between branches using diff summary
+  const diffSummary = await git.diffSummary([`${sourceBranch}..${targetBranch}`]);
+  return diffSummary.files.map(file => file.file);
+}
+
 module.exports = {
   getChangedFiles,
   getFileContent,
   getFileDiff,
+  getBranchDiff,
   parseDiff 
 };

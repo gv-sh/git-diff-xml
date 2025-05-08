@@ -1,6 +1,6 @@
 # git-diff-xml
 
-A command-line tool that packages Git commit changes into a single XML file for code analysis by LLMs like Claude.
+A command-line tool that packages Git commit changes or branch comparisons into a single XML file for code analysis by LLMs like Claude.
 
 ## Installation
 
@@ -11,16 +11,23 @@ npm install -g git-diff-xml
 ## Usage
 
 ```bash
+# Analyze a specific commit
 git-diff-xml --commit <commit-hash> --output <output-file.xml>
+
+# Compare changes between branches
+git-diff-xml --branch-compare <source>..<target> --output <output-file.xml>
 ```
 
 ### Options
 
-- `-c, --commit <hash>`: Git commit hash to analyze (required)
+- `-c, --commit <hash>`: Git commit hash to analyze
+- `-b, --branch-compare <branches>`: Compare branches (format: source..target)
 - `-o, --output <file>`: Output XML file path (default: "git-diff-xml-output.xml")
 - `-d, --dir <directory>`: Git repository directory (default: current directory)
 - `-h, --help`: Display help information
 - `-V, --version`: Display version information
+
+Either `--commit` or `--branch-compare` must be specified.
 
 ## XML Output Structure
 
@@ -51,6 +58,7 @@ The tool generates an XML file with the following structure:
 - **Structured Analysis**: Present code changes in a structured format that's easy for AI to parse
 - **Full Context**: Include both full file content and specific changes for complete understanding
 - **Simple Interface**: Straightforward CLI with minimal dependencies
+- **Branch Comparison**: Compare changes between any two Git branches or refs
 
 ## Testing
 
